@@ -32,7 +32,7 @@ module.exports.createCard = (req, res) => {
     })
     // данные не записались, вернём ошибку
     .catch((err) => {
-      if (err.statusCode === 400) {
+      if (err.name === 'ValidatorError') {
         res.status(BAD_REQUEST).send({ message: 'Переданы некорректные данные при создании карточки.' });
       } else {
         res.status(INTERNAL_SERVER_ERROR).send(err);

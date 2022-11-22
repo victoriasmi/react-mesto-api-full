@@ -14,7 +14,11 @@ module.exports.getUsers = (req, res) => {
     })
     // данные не записались, вернём ошибку
     .catch((err) => {
-      res.status(INTERNAL_SERVER_ERROR).send(err);
+      if (err.name === 'ValidationError') {
+        res.status(BAD_REQUEST).send({ message: 'Некорректный запрос.' });
+      } else {
+        res.status(INTERNAL_SERVER_ERROR).send(err);
+      }
     });
 };
 
@@ -29,7 +33,9 @@ module.exports.getUserById = (req, res) => {
     })
     // данные не записались, вернём ошибку
     .catch((err) => {
-      if (err.statusCode === 404) {
+      if (err.name === 'ValidationError') {
+        res.status(BAD_REQUEST).send({ message: 'Некорректный запрос.' });
+      } else if (err.statusCode === 404) {
         res.status(NOT_FOUND).send({ message: 'Пользователь по указанному _id не найден.' });
       } else {
         res.status(INTERNAL_SERVER_ERROR).send(err);
@@ -59,17 +65,17 @@ module.exports.createUser = (req, res) => {
 
 module.exports.updateProfile = (req, res) => {
   const { name, about } = req.body;
-  User.findByIdAndUpdate(req.user._id, { name, about })
+  User.findByIdAndUpdate(req.user._id, { name, about }, { runValidators: true })
     // .orFail(() => {
     //   throw new Error({ message: 'Передан некорректный id пользователя.' });
     // })
     // вернём записанные в базу данные
-    .then((user) => {
-      res.send({ data: user });
+    .then(() => {
+      res.status(200).send(req.body);
     })
     // данные не записались, вернём ошибку
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.name === 'ValidationError') {
         res.status(BAD_REQUEST).send({ message: 'Переданы некорректные данные при обновлении профиля.' });
       } else if (err.statusCode === 404) {
         res.status(NOT_FOUND).send({ message: 'Пользователь с указанным _id не найден.' });
@@ -82,17 +88,17 @@ module.exports.updateProfile = (req, res) => {
 module.exports.updateAvatar = (req, res) => {
   const { avatar } = req.body;
 
-  User.findByIdAndUpdate(req.user._id, { avatar })
+  User.findByIdAndUpdate(req.user._id, avatar, { runValidators: true })
     // .orFail(() => {
     //   throw new Error({ message: 'Передан некорректный id пользователя.' });
     // })
     // вернём записанные в базу данные
-    .then((user) => {
-      res.send({ data: user });
+    .then(() => {
+      res.status(200).send(req.body);
     })
     // данные не записались, вернём ошибку
     .catch((err) => {
-      if (err.statusCode === 400) {
+      if (err.name === 'ValidationError') {
         res.status(BAD_REQUEST).send({ message: 'Переданы некорректные данные при обновлении аватара.' });
       } else if (err.statusCode === 404) {
         res.status(NOT_FOUND).send({ message: 'Пользователь с указанным _id не найден.' });

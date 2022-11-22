@@ -11,7 +11,7 @@ module.exports.getCard = (req, res) => {
     // })
     // вернём записанные в базу данные
     .then((card) => {
-      res.send({ data: card });
+      res.status(200).send({ data: card });
     })
     // данные не записались, вернём ошибку
     .catch((err) => {
@@ -28,7 +28,7 @@ module.exports.createCard = (req, res) => {
 
   Card.create({ name, link, owner: req.user._id })
     .then((card) => {
-      res.send({ data: card });
+      res.status(200).send({ data: card });
     })
     // данные не записались, вернём ошибку
     .catch((err) => {
@@ -42,10 +42,9 @@ module.exports.createCard = (req, res) => {
 
 module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
-
     // вернём записанные в базу данные
     .then((card) => {
-      res.send({ data: card });
+      res.status(200).send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -68,7 +67,7 @@ module.exports.likeCard = (req, res) => {
     //   throw new Error({ message: 'Некорректный запрос.' });
     // })
     .then((card) => {
-      res.send({ data: card });
+      res.status(200).send({ data: card });
     })
     // данные не записались, вернём ошибку
     .catch((err) => {
@@ -92,7 +91,7 @@ module.exports.dislikeCard = (req, res) => {
     //   throw new Error({ message: 'Некорректный запрос.' });
     // })
     .then((card) => {
-      res.send({ data: card });
+      res.status(200).send({ data: card });
     })
     // данные не записались, вернём ошибку
     .catch((err) => {

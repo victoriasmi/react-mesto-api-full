@@ -10,7 +10,7 @@ module.exports.getUsers = (req, res) => {
     //   throw new Error({ message: 'Некорректный запрос.' });
     // })
     .then((users) => {
-      res.send({ data: users });
+      res.status(200).send({ data: users });
     })
     // данные не записались, вернём ошибку
     .catch((err) => {
@@ -23,19 +23,19 @@ module.exports.getUsers = (req, res) => {
 };
 
 module.exports.getUserById = (req, res) => {
-  User.findById(req.params.id)
-    // .orFail(() => {
-    //   throw new Error({ message: 'Передан некорректный id пользователя.' });
-    // })
+  User.findById(req.params.userId)
+    .orFail(() => {
+      throw new Error({ message: 'Передан некорректный id пользователя.' });
+    })
     // вернём записанные в базу данные
     .then((user) => {
-      res.send({ data: user });
+      res.status(200).send({ data: user });
     })
     // данные не записались, вернём ошибку
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(BAD_REQUEST).send({ message: 'Некорректный запрос.' });
-      } else if (err.statusCode === 404) {
+      if (err.name === 'CastError') {
+        res.status(BAD_REQUEST).send({ message: 'Пользователь по указанному _id не найден.' });
+      } else if (err.name === 'ValidationError') {
         res.status(NOT_FOUND).send({ message: 'Пользователь по указанному _id не найден.' });
       } else {
         res.status(INTERNAL_SERVER_ERROR).send(err);
@@ -45,17 +45,17 @@ module.exports.getUserById = (req, res) => {
 
 module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
-  User.create({ name, about, avatar })
+  User.create({ name, about, avatar }, { runValidators: true })
     // .orFail(() => {
     //   throw new Error({ message: 'Переданы некорректные данные при создании пользователя.' });
     // })
     // вернём записанные в базу данные
     .then((user) => {
-      res.send({ data: user });
+      res.status(200).send({ data: user });
     })
     // данные не записались, вернём ошибку
     .catch((err) => {
-      if (err.statusCode === 400) {
+      if (err.name === 'ValidationError') {
         res.status(BAD_REQUEST).send({ message: 'Переданы некорректные данные при создании пользователя. ' });
       } else {
         res.status(INTERNAL_SERVER_ERROR).send(err);
@@ -70,8 +70,8 @@ module.exports.updateProfile = (req, res) => {
     //   throw new Error({ message: 'Передан некорректный id пользователя.' });
     // })
     // вернём записанные в базу данные
-    .then(() => {
-      res.status(200).send(req.body);
+    .then((user) => {
+      res.status(200).send({ data: user });
     })
     // данные не записались, вернём ошибку
     .catch((err) => {
@@ -93,8 +93,8 @@ module.exports.updateAvatar = (req, res) => {
     //   throw new Error({ message: 'Передан некорректный id пользователя.' });
     // })
     // вернём записанные в базу данные
-    .then(() => {
-      res.status(200).send(req.body);
+    .then((user) => {
+      res.status(200).send({ data: user });
     })
     // данные не записались, вернём ошибку
     .catch((err) => {

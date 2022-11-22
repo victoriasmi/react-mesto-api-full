@@ -6,9 +6,9 @@ const INTERNAL_SERVER_ERROR = 500;
 
 module.exports.getCard = (req, res) => {
   Card.find({})
-    .orFail(() => {
-      throw new Error({ message: 'Некорректный запрос.' });
-    })
+    // .orFail(() => {
+    //   throw new Error({ message: 'Некорректный запрос.' });
+    // })
     // вернём записанные в базу данные
     .then((card) => {
       res.send({ data: card });
@@ -42,6 +42,7 @@ module.exports.createCard = (req, res) => {
 
 module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
+
     // вернём записанные в базу данные
     .then((card) => {
       res.send({ data: card });
@@ -63,9 +64,9 @@ module.exports.likeCard = (req, res) => {
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
     { new: true },
   )
-    .orFail(() => {
-      throw new Error({ message: 'Некорректный запрос.' });
-    })
+    // .orFail(() => {
+    //   throw new Error({ message: 'Некорректный запрос.' });
+    // })
     .then((card) => {
       res.send({ data: card });
     })
@@ -87,9 +88,9 @@ module.exports.dislikeCard = (req, res) => {
     { $pull: { likes: req.user._id } }, // убрать _id из массива
     { new: true },
   )
-    .orFail(() => {
-      throw new Error({ message: 'Некорректный запрос.' });
-    })
+    // .orFail(() => {
+    //   throw new Error({ message: 'Некорректный запрос.' });
+    // })
     .then((card) => {
       res.send({ data: card });
     })

@@ -6,9 +6,9 @@ const INTERNAL_SERVER_ERROR = 500;
 
 module.exports.getUsers = (req, res) => {
   User.find({})
-    .orFail(() => {
-      throw new Error({ message: 'Некорректный запрос.' });
-    })
+    // .orFail(() => {
+    //   throw new Error({ message: 'Некорректный запрос.' });
+    // })
     .then((users) => {
       res.send({ data: users });
     })
@@ -20,9 +20,9 @@ module.exports.getUsers = (req, res) => {
 
 module.exports.getUserById = (req, res) => {
   User.findById(req.params.id)
-    .orFail(() => {
-      throw new Error({ message: 'Передан некорректный id пользователя.' });
-    })
+    // .orFail(() => {
+    //   throw new Error({ message: 'Передан некорректный id пользователя.' });
+    // })
     // вернём записанные в базу данные
     .then((user) => {
       res.send({ data: user });
@@ -40,9 +40,9 @@ module.exports.getUserById = (req, res) => {
 module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
   User.create({ name, about, avatar })
-    .orFail(() => {
-      throw new Error({ message: 'Переданы некорректные данные при создании пользователя.' });
-    })
+    // .orFail(() => {
+    //   throw new Error({ message: 'Переданы некорректные данные при создании пользователя.' });
+    // })
     // вернём записанные в базу данные
     .then((user) => {
       res.send({ data: user });
@@ -60,9 +60,9 @@ module.exports.createUser = (req, res) => {
 module.exports.updateProfile = (req, res) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(req.user._id, { name, about })
-    .orFail(() => {
-      throw new Error({ message: 'Передан некорректный id пользователя.' });
-    })
+    // .orFail(() => {
+    //   throw new Error({ message: 'Передан некорректный id пользователя.' });
+    // })
     // вернём записанные в базу данные
     .then((user) => {
       res.send({ data: user });
@@ -83,9 +83,9 @@ module.exports.updateAvatar = (req, res) => {
   const { avatar } = req.body;
 
   User.findByIdAndUpdate(req.user._id, { avatar })
-    .orFail(() => {
-      throw new Error({ message: 'Передан некорректный id пользователя.' });
-    })
+    // .orFail(() => {
+    //   throw new Error({ message: 'Передан некорректный id пользователя.' });
+    // })
     // вернём записанные в базу данные
     .then((user) => {
       res.send({ data: user });

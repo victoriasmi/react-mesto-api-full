@@ -12,5 +12,4 @@ router.patch('/users/me', updateProfile);
 // router.use((req, res) => {
 //   res.status(404).send({ message: 'Страница по указанному маршруту не найдена' });
 // });
-
 module.exports = router;

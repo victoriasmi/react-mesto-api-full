@@ -27,10 +27,6 @@ module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
 
   Card.create({ name, link, owner: req.user._id })
-    .orFail(() => {
-      throw new Error({ message: 'Некорректный запрос.' });
-    })
-    // вернём записанные в базу данные
     .then((card) => {
       res.send({ data: card });
     })
@@ -46,15 +42,12 @@ module.exports.createCard = (req, res) => {
 
 module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
-    .orFail(() => {
-      throw new Error({ message: 'Карточка с указанным _id не найдена.' });
-    })
     // вернём записанные в базу данные
     .then((card) => {
       res.send({ data: card });
     })
     .catch((err) => {
-      if (err.statusCode === 400) {
+      if (err.statusCode === 'CastError') {
         res.status(BAD_REQUEST).send({ message: 'Некорректный запрос.' });
       } else if (err.statusCode === 404) {
         res.status(BAD_REQUEST).send({ message: 'Карточка с указанным _id не найдена.' });

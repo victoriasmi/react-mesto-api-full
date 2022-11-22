@@ -26,13 +26,13 @@ module.exports.getCard = (req, res) => {
 module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
 
-  Card.create({ name, link, owner: req.user._id })
+  Card.create({ name, link, owner: req.user._id }, { runValidators: true })
     .then((card) => {
       res.status(200).send({ data: card });
     })
     // данные не записались, вернём ошибку
     .catch((err) => {
-      if (err.name === 'ValidatorError') {
+      if (err.name === 'ValidatorError' || err.name === 'CastError' || err.name === 'ValidatorError') {
         res.status(BAD_REQUEST).send({ message: 'Переданы некорректные данные при создании карточки.' });
       } else {
         res.status(INTERNAL_SERVER_ERROR).send(err);

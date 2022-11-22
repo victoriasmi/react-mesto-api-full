@@ -55,7 +55,7 @@ module.exports.createUser = (req, res) => {
     })
     // данные не записались, вернём ошибку
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'ValidationError' || err.name === 'ValidatorError') {
         res.status(BAD_REQUEST).send({ message: 'Переданы некорректные данные при создании пользователя. ' });
       } else {
         res.status(INTERNAL_SERVER_ERROR).send(err);
@@ -75,7 +75,7 @@ module.exports.updateProfile = (req, res) => {
     })
     // данные не записались, вернём ошибку
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'ValidationError' || err.name === 'ValidatorError') {
         res.status(BAD_REQUEST).send({ message: 'Переданы некорректные данные при обновлении профиля.' });
       } else if (err.statusCode === 404) {
         res.status(NOT_FOUND).send({ message: 'Пользователь с указанным _id не найден.' });
@@ -98,7 +98,7 @@ module.exports.updateAvatar = (req, res) => {
     })
     // данные не записались, вернём ошибку
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'ValidationError' || err.name === 'ValidatorError') {
         res.status(BAD_REQUEST).send({ message: 'Переданы некорректные данные при обновлении аватара.' });
       } else if (err.statusCode === 404) {
         res.status(NOT_FOUND).send({ message: 'Пользователь с указанным _id не найден.' });

@@ -54,7 +54,9 @@ module.exports.deleteCard = (req, res) => {
       res.send({ data: card });
     })
     .catch((err) => {
-      if (err.statusCode === 404) {
+      if (err.statusCode === 400) {
+        res.status(BAD_REQUEST).send({ message: 'Некорректный запрос.' });
+      } else if (err.statusCode === 404) {
         res.status(BAD_REQUEST).send({ message: 'Карточка с указанным _id не найдена.' });
       } else {
         res.status(INTERNAL_SERVER_ERROR).send(err);

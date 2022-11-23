@@ -22,16 +22,10 @@ app.use((req, res, next) => {
 app.use('/', require('./routes/users'));
 app.use('/', require('./routes/cards'));
 
-// app.use(express.static(path.join(__dirname, 'public')));
-app.listen(PORT, () => {
-  // console.log(`app listening to port ${PORT}`);
+app.use((req, res) => {
+  res.status(404).send({ message: 'Страница по указанному маршруту не найдена' });
 });
 
-// const process = require('process');
-
-// process.on('uncaughtException', (err, origin) => {
-//   console.log(`${origin} ${err.name} c текстом ${err.message} не была обработана.`);
-// });
-
-// // Выбросим синхронную ошибку
-// throw new Error(`Ошибка, которую мы пропустили`);
+app.listen(PORT, () => {
+  console.log(`app listening to port ${PORT}`);
+});

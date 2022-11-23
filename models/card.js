@@ -12,7 +12,7 @@ const cardSchema = new mongoose.Schema({
     required: true, // оно должно быть у каждого пользователя, так что имя — обязательное поле
   },
   owner: {
-    type: mongoose.Schema.Types.ObjectId, // имя — это строка
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
     required: true, // оно должно быть у каждого пользователя, так что имя — обязательное поле
   },

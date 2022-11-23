@@ -54,7 +54,7 @@ module.exports.createUser = (req, res) => {
 
 module.exports.updateProfile = (req, res) => {
   const { name, about } = req.body;
-  User.findByIdAndUpdate(req.user._id, { name, about }, { runValidators: true })
+  User.findByIdAndUpdate(req.user._id, { name, about })
     .then(() => {
       res.status(200).send(req.body);
     })

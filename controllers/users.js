@@ -20,10 +20,8 @@ module.exports.getUsers = (req, res) => {
 
 module.exports.getUserById = (req, res) => {
   User.findById(req.params.userId)
-    .orFail.catch((err) => {
-      if (err.statusCode === NOT_FOUND) {
-        throw new Error('Передан некорректный id пользователя.');
-      }
+    .orFail(() => {
+      res.status(NOT_FOUND).send({ message: 'Пользователь по указанному _id не найден.' });
     })
     .then((user) => {
       res.status(200).send({ data: user });
@@ -57,10 +55,8 @@ module.exports.createUser = (req, res) => {
 module.exports.updateProfile = (req, res) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(req.user._id, { name, about }, { runValidators: true })
-    .orFail.catch((err) => {
-      if (err.statusCode === 404) {
-        throw new Error('Передан некорректный id пользователя.');
-      }
+    .orFail(() => {
+      res.status(NOT_FOUND).send({ message: 'Пользователь по указанному _id не найден.' });
     })
     .then((user) => {
       res.status(200).send({ data: user });
@@ -78,10 +74,8 @@ module.exports.updateAvatar = (req, res) => {
   const { avatar } = req.body;
 
   User.findByIdAndUpdate(req.user._id, { avatar }, { runValidators: true })
-    .orFail.catch((err) => {
-      if (err.statusCode === 404) {
-        throw new Error('Передан некорректный id пользователя.');
-      }
+    .orFail.catch(() => {
+      res.status(NOT_FOUND).send({ message: 'Пользователь по указанному _id не найден.' });
     })
     .then(() => {
       res.status(200).send(req.body);

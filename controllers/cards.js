@@ -6,10 +6,8 @@ const INTERNAL_SERVER_ERROR = 500;
 
 module.exports.getCard = (req, res) => {
   Card.find({})
-    .orFail.catch((err) => {
-      if (err.statusCode === NOT_FOUND || BAD_REQUEST) {
-        throw new Error('Некорректный запрос.');
-      }
+    .orFail.catch(() => {
+      res.status(NOT_FOUND).send({ message: 'Карточка с указанным _id не найдена.' });
     })
     .then((card) => {
       res.status(200).send({ data: card });
@@ -37,10 +35,8 @@ module.exports.createCard = (req, res) => {
 
 module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
-    .orFail.catch((err) => {
-      if (err.statusCode === NOT_FOUND) {
-        throw new Error('Карточка с указанным _id не найдена.');
-      }
+    .orFail.catch(() => {
+      res.status(NOT_FOUND).send({ message: 'Карточка с указанным _id не найдена.' });
     })
     .then((card) => {
       res.status(200).send({ data: card });
@@ -60,10 +56,8 @@ module.exports.likeCard = (req, res) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
-    .orFail.catch((err) => {
-      if (err.statusCode === NOT_FOUND) {
-        throw new Error('Карточка с указанным _id не найдена.');
-      }
+    .orFail.catch(() => {
+      res.status(NOT_FOUND).send({ message: 'Карточка с указанным _id не найдена.' });
     })
     .then((card) => {
       res.status(200).send({ data: card });
@@ -83,10 +77,8 @@ module.exports.dislikeCard = (req, res) => {
     { $pull: { likes: req.user._id } }, // убрать _id из массива
     { new: true },
   )
-    .orFail.catch((err) => {
-      if (err.statusCode === NOT_FOUND) {
-        throw new Error('Карточка с указанным _id не найдена.');
-      }
+    .orFail.catch(() => {
+      res.status(NOT_FOUND).send({ message: 'Карточка с указанным _id не найдена.' });
     })
     .then((card) => {
       res.status(200).send({ data: card });

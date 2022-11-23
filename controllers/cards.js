@@ -6,9 +6,6 @@ const INTERNAL_SERVER_ERROR = 500;
 
 module.exports.getCard = (req, res) => {
   Card.find({})
-    .orFail.catch(() => {
-      res.status(NOT_FOUND).send({ message: 'Карточка с указанным _id не найдена.' });
-    })
     .then((card) => {
       res.status(200).send({ data: card });
     })
@@ -19,7 +16,8 @@ module.exports.getCard = (req, res) => {
 
 module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
-  Card.create({ name, link, owner: req.user._id }, { runValidators: true })
+
+  Card.create({ name, link, owner: req.user._id })
     .then((card) => {
       res.status(200).send({ data: card });
     })
@@ -34,7 +32,7 @@ module.exports.createCard = (req, res) => {
 
 module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
-    .orFail.catch(() => {
+    .orFail(() => {
       res.status(NOT_FOUND).send({ message: 'Карточка с указанным _id не найдена.' });
     })
     .then((card) => {
@@ -55,7 +53,7 @@ module.exports.likeCard = (req, res) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
-    .orFail.catch(() => {
+    .orFail(() => {
       res.status(NOT_FOUND).send({ message: 'Карточка с указанным _id не найдена.' });
     })
     .then((card) => {
@@ -76,7 +74,7 @@ module.exports.dislikeCard = (req, res) => {
     { $pull: { likes: req.user._id } }, // убрать _id из массива
     { new: true },
   )
-    .orFail.catch(() => {
+    .orFail(() => {
       res.status(NOT_FOUND).send({ message: 'Карточка с указанным _id не найдена.' });
     })
     .then((card) => {

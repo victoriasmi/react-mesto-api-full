@@ -55,11 +55,8 @@ module.exports.createUser = (req, res) => {
 module.exports.updateProfile = (req, res) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(req.user._id, { name, about }, { runValidators: true })
-    .orFail(() => {
-      res.status(NOT_FOUND).send({ message: 'Пользователь по указанному _id не найден.' });
-    })
-    .then((user) => {
-      res.status(200).send({ data: user });
+    .then(() => {
+      res.status(200).send(req.body);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -74,9 +71,6 @@ module.exports.updateAvatar = (req, res) => {
   const { avatar } = req.body;
 
   User.findByIdAndUpdate(req.user._id, { avatar }, { runValidators: true })
-    .orFail.catch(() => {
-      res.status(NOT_FOUND).send({ message: 'Пользователь по указанному _id не найден.' });
-    })
     .then(() => {
       res.status(200).send(req.body);
     })

@@ -10,24 +10,20 @@ module.exports.getUsers = (req, res) => {
       res.status(200).send({ data: users });
     })
     .catch((err) => {
-      if (err.statusCode === 400) {
-        res.status(BAD_REQUEST).send({ message: 'Некорректный запрос.' });
-      } else {
-        res.status(INTERNAL_SERVER_ERROR).send(err.message);
-      }
+      res.status(INTERNAL_SERVER_ERROR).send(err.message);
     });
 };
 
 module.exports.getUserById = (req, res) => {
   User.findById(req.params.userId)
-    .orFail(() => {
-      res.status(NOT_FOUND).send({ message: 'Пользователь по указанному _id не найден.' });
-    })
+    .orFail()
     .then((user) => {
       res.status(200).send({ data: user });
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.name === 'DocumentNotFoundError') {
+        res.status(NOT_FOUND).send({ message: 'Пользователь по указанному _id не найден.' });
+      } else if (err.name === 'CastError') {
         res.status(BAD_REQUEST).send({ message: 'Пользователь по указанному _id не найден.' });
       } else {
         res.status(INTERNAL_SERVER_ERROR).send(err.message);

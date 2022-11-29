@@ -32,14 +32,14 @@ module.exports.createCard = (req, res) => {
 
 module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
-    .orFail(() => {
-      res.status(NOT_FOUND).send({ message: 'Карточка с указанным _id не найдена.' });
-    })
+    .orFail()
     .then((card) => {
       res.status(200).send({ data: card });
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.name === 'DocumentNotFoundError') {
+        res.status(NOT_FOUND).send({ message: 'Карточка с указанным _id не найдена.' });
+      } else if (err.name === 'CastError') {
         res.status(BAD_REQUEST).send({ message: 'Некорректный запрос.' });
       } else {
         res.status(INTERNAL_SERVER_ERROR).send(err.message);
@@ -53,14 +53,14 @@ module.exports.likeCard = (req, res) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
-    .orFail(() => {
-      res.status(NOT_FOUND).send({ message: 'Карточка с указанным _id не найдена.' });
-    })
+    .orFail()
     .then((card) => {
       res.status(200).send({ data: card });
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.name === 'DocumentNotFoundError') {
+        res.status(NOT_FOUND).send({ message: 'Карточка с указанным _id не найдена.' });
+      } else if (err.name === 'CastError') {
         res.status(BAD_REQUEST).send({ message: 'Переданы некорректные данные для постановки лайка.' });
       } else {
         res.status(INTERNAL_SERVER_ERROR).send(err.message);
@@ -74,14 +74,14 @@ module.exports.dislikeCard = (req, res) => {
     { $pull: { likes: req.user._id } }, // убрать _id из массива
     { new: true },
   )
-    .orFail(() => {
-      res.status(NOT_FOUND).send({ message: 'Карточка с указанным _id не найдена.' });
-    })
+    .orFail()
     .then((card) => {
       res.status(200).send({ data: card });
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.name === 'DocumentNotFoundError') {
+        res.status(NOT_FOUND).send({ message: 'Карточка с указанным _id не найдена.' });
+      } else if (err.name === 'CastError') {
         res.status(BAD_REQUEST).send({ message: 'Переданы некорректные данные для снятия лайка.' });
       } else {
         res.status(INTERNAL_SERVER_ERROR).send(err.message);

@@ -1,6 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const { celebrate, Joi } = require('celebrate');
+const { errors } = require('celebrate');
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 
@@ -9,23 +12,31 @@ const { PORT = 3000 } = process.env;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 // подключаемся к серверу mongo
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
-// app.use((req, res, next) => {
-//   req.user = {
-//     _id: '637bce920fc9e8dcf77ea48b',
-//   };
-
-//   next();
-// });
-
-// const BAD_REQUEST = 401;
-// const NOT_FOUND = 404;
-
-app.post('/signin', login);
-app.post('/signup', createUser);
+app.post(
+  '/signin',
+  celebrate({
+    body: Joi.object().keys({
+      email: Joi.string().required(),
+      password: Joi.string().required(),
+    }),
+  }),
+  login,
+);
+app.post(
+  '/signup',
+  celebrate({
+    body: Joi.object().keys({
+      email: Joi.string().required(),
+      password: Joi.string().required(),
+    }),
+  }),
+  createUser,
+);
 
 // app.use((req, res) => {
 //   res.status(401).send({ message: 'Необходима авторизация' });
@@ -40,6 +51,8 @@ app.use(auth);
 
 app.use('/', require('./routes/users'));
 app.use('/', require('./routes/cards'));
+
+app.use(errors()); // обработчик ошибок celebrate
 
 app.use((err, req, res) => {
   res.status(err.statusCode).send({ message: err.message });

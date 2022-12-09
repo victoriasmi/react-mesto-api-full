@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs'); // импортируем bcrypt
 const jwt = require('jsonwebtoken');
+const { JWT_SECRET } = require('../config');
 const User = require('../models/user');
 const BadRequestError = require('../errors/bad-request-err');
 const UnauthorizedError = require('../errors/unauthorized-err');
@@ -10,19 +11,18 @@ module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => {
       if (!users) {
-        throw new NotFoundError('Пользователь по указанному _id не найден.');
+        throw new NotFoundError({ message: 'Пользователь по указанному _id не найден.' });
       }
       res.status(200).send({ data: users });
     })
     .catch(next);
-  // res.status(INTERNAL_SERVER_ERROR).send(err.message);
 };
 
 module.exports.getUserById = (req, res, next) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Пользователь по указанному _id не найден.');
+        throw new NotFoundError({ message: 'Пользователь по указанному _id не найден.' });
       }
       res.status(200).send({ data: user });
     })
@@ -42,7 +42,7 @@ module.exports.getCurrentUser = (req, res, next) => {
   User.findOne(req.user._id)
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Пользователь по указанному _id не найден.');
+        throw new NotFoundError({ message: 'Пользователь по указанному _id не найден.' });
       }
       res.status(200).send({ data: user });
     })
@@ -54,12 +54,12 @@ module.exports.createUser = (req, res, next) => {
     name, about, avatar, email,
   } = req.body;
 
-  if (!email || !req.body.password) { throw new BadRequestError('Пользователь с таким email уже существует.'); }
+  if (!email || !req.body.password) { throw new BadRequestError({ message: 'Неверные данные.' }); }
 
   User.findOne({ email })
     .then((mail) => {
       if (mail) {
-        throw new ConflictError('Пользователь с таким email уже существует.');
+        throw new ConflictError({ message: 'Пользователь с таким email уже существует.' });
       }
     });
 
@@ -80,16 +80,21 @@ module.exports.login = (req, res, next) => {
   return User.findUserByCredentials(email, password)
     .then((user) => {
       if (!user) {
-        throw new UnauthorizedError('Ошибка аутентификации.');
+        throw new UnauthorizedError({ message: 'Ошибка аутентификации.' });
       }
       // аутентификация успешна! пользователь в переменной user
       const token = jwt.sign(
         { _id: user._id },
-        'some-secret-key',
+        JWT_SECRET,
         { expiresIn: '7d' },
       );
+      res.cookie('jwt', token, {
+        // token - наш JWT токен, который мы отправляем
+        maxAge: 3600000 * 24 * 7,
+        httpOnly: true,
+      });
       // вернём токен
-      res.send({ token });
+      return res.send({ token });
     })
     .catch(next);
 };
@@ -97,7 +102,10 @@ module.exports.login = (req, res, next) => {
 module.exports.updateProfile = (req, res, next) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(req.user._id, { name, about }, { runValidators: true })
-    .then(() => {
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError({ message: 'Пользователь по указанному _id не найден.' });
+      }
       res.status(200).send(req.body);
     })
     .catch(next);
@@ -114,7 +122,10 @@ module.exports.updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
 
   User.findByIdAndUpdate(req.user._id, { avatar }, { runValidators: true })
-    .then(() => {
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError({ message: 'Пользователь по указанному _id не найден.' });
+      }
       res.status(200).send(req.body);
     })
     .catch(next);

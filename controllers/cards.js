@@ -18,7 +18,7 @@ module.exports.createCard = (req, res, next) => {
   Card.create({ name, link, owner: req.user._id })
     .then((card) => {
       if (!card) {
-        throw new BadRequestError('Переданы некорректные данные.');
+        throw new BadRequestError({ message: 'Переданы некорректные данные.' });
       }
       res.status(200).send({ data: card });
     })
@@ -31,12 +31,12 @@ module.exports.deleteCard = (req, res, next) => {
       .orFail()
       .then((card) => {
         if (!card) {
-          throw new NotFoundError('Карточка с указанным _id не найдена.');
+          throw new NotFoundError({ message: 'Карточка с указанным _id не найдена.' });
         }
         res.status(200).send({ data: card });
       })
       .catch(next);
-  } else { throw new ForbiddenError('У вас нет прав для осуществления этого действия.'); }
+  } else { throw new ForbiddenError({ message: 'У вас нет прав для осуществления этого действия.' }); }
 };
 
 module.exports.likeCard = (req, res, next) => {
@@ -48,7 +48,7 @@ module.exports.likeCard = (req, res, next) => {
     .orFail()
     .then((card) => {
       if (!card) {
-        throw new NotFoundError('Карточка с указанным _id не найдена.');
+        throw new NotFoundError({ message: 'Карточка с указанным _id не найдена.' });
       }
       res.status(200).send({ data: card });
     })

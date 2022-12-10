@@ -1,12 +1,12 @@
 const jwt = require('jsonwebtoken');
 const UnauthorizedError = require('../errors/unauthorized-err');
 
-const { JWT_SECRET } = require('../config');
+const JWT_SECRET = require('../config');
 
 module.exports = (req, res, next) => {
   // тут будет вся авторизация
   // достаём авторизационный заголовок
-  // const { jwtCookies } = req.cookies.jwt;
+  // const { authorization } = req.header;
   // убеждаемся, что он есть или начинается с Bearer
   // if (!authorization || !authorization.startsWith('Bearer ')) {
   // if (!jwtCookies) {
@@ -14,6 +14,7 @@ module.exports = (req, res, next) => {
   // }
   // извлечём токен
   // const token = authorization.replace('Bearer ', '');
+  // const { jwtCookies } = req.cookies.jwt;
   const token = req.cookies.jwt;
   let payload;
   try {

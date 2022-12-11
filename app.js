@@ -6,6 +6,7 @@ const { celebrate, Joi } = require('celebrate');
 const { errors } = require('celebrate');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
+const validator = require('validator');
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const error = require('./middlewares/error');
@@ -41,6 +42,14 @@ app.post(
   }),
   login,
 );
+
+const method = (value) => {
+  const result = validator.isURL(value);
+  if (result) {
+    return value;
+  } throw new Error('Некорректная ссылка.');
+};
+
 app.post(
   '/signup',
   celebrate({
@@ -48,6 +57,9 @@ app.post(
       email: Joi.string().required().email(),
       // { tlds: { allow: false } }
       password: Joi.string().required(),
+      name: Joi.string().min(2).max(30),
+      about: Joi.string().min(2).max(30),
+      avatar: Joi.string().custom(method),
     }),
   }),
   createUser,

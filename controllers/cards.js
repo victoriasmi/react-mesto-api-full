@@ -40,7 +40,7 @@ module.exports.deleteCard = (req, res, next) => {
             res.status(200).send({ data: card });
           });
       } else {
-        next(new ForbiddenError('У вас нет прав для осуществления этого действия.'));
+        throw new ForbiddenError('У вас нет прав для осуществления этого действия.');
       }
     })
     .catch((err) => {

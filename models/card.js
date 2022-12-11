@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const urlRegExp = require('urlregex');
 
 const cardSchema = new mongoose.Schema({
   name: { // у пользователя есть имя — опишем требования к имени в схеме:
@@ -10,6 +11,10 @@ const cardSchema = new mongoose.Schema({
   link: {
     type: String, // имя — это строка
     required: true, // оно должно быть у каждого пользователя, так что имя — обязательное поле
+    validate: {
+      validator: (v) => urlRegExp.test(v),
+      message: 'Поле "link" должно быть валидным url-адресом.',
+    },
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,

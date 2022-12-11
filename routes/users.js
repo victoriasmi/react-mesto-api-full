@@ -13,9 +13,9 @@ const method = (value) => {
   } throw new Error('Некорректная ссылка.');
 };
 
+router.get('/users/me', getCurrentUser);
 router.get('/users', getUsers);
 router.get('/users/:userId', getUserById);
-router.get('/users/me', getCurrentUser);
 router.patch(
   '/users/me/avatar',
   celebrate({

@@ -18,34 +18,35 @@ module.exports.getUsers = (req, res, next) => {
     .catch(next);
 };
 
+module.exports.getCurrentUser = (req, res, next) => {
+  const { _id } = req.user._id;
+  User.findOne(_id)
+    .orFail(() => {
+      next(new NotFoundError({ message: 'Пользователь по указанному _id не найден.' }));
+    })
+    .then((user) => {
+      res.status(200).send({ data: user });
+    })
+    .catch(next);
+};
+
 module.exports.getUserById = (req, res, next) => {
   User.findById(req.params.userId)
     .orFail(() => {
-      next(new NotFoundError('Пользователь по указанному _id не найден.'));
+      next(new NotFoundError({ message: 'Пользователь по указанному _id не найден.' }));
     })
     .then((user) => {
       res.status(200).send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Пользователь по указанному _id не найден.'));
+        next(new BadRequestError({ message: 'Пользователь по указанному _id не найден.' }));
       } else if (err.name === 'ResourceNotFound') {
-        next(new NotFoundError('Пользователь по указанному _id не найден.'));
+        next(new NotFoundError({ message: 'Пользователь по указанному _id не найден.' }));
       } else {
         next(err);
       }
     });
-};
-
-module.exports.getCurrentUser = (req, res, next) => {
-  User.findOne(req.user._id)
-    .orFail(() => {
-      next(new NotFoundError('Пользователь по указанному _id не найден.'));
-    })
-    .then((user) => {
-      res.status(200).send({ data: user });
-    })
-    .catch(next);
 };
 
 module.exports.createUser = (req, res, next) => {
@@ -56,7 +57,7 @@ module.exports.createUser = (req, res, next) => {
   User.findOne({ email })// отрабатывает ли проверка?
     .then((mail) => {
       if (mail) {
-        throw new ConflictError('Пользователь с таким email уже существует.');
+        throw new ConflictError({ message: 'Пользователь с таким email уже существует.' });
       } else {
         bcrypt.hash(req.body.password, 10)
           .then((hash) => User.create({
@@ -103,16 +104,17 @@ module.exports.login = (req, res, next) => {
 
 module.exports.updateProfile = (req, res, next) => {
   const { name, about } = req.body;
-  User.findByIdAndUpdate(req.user._id, { name, about }) //  { runValidators: true }
+  const { _id } = req.user._id;
+  User.findByIdAndUpdate(_id, { name, about }) //  { runValidators: true }
     .orFail(() => {
-      next(new NotFoundError('Пользователь по указанному _id не найден.'));
+      next(new NotFoundError({ message: 'Пользователь по указанному _id не найден.' }));
     })
     .then(() => {
       res.status(200).send(req.body);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Пользователь по указанному _id не найден.'));
+        next(new BadRequestError({ message: 'Пользователь по указанному _id не найден.' }));
       } else {
         next(err);
       }
@@ -121,8 +123,9 @@ module.exports.updateProfile = (req, res, next) => {
 
 module.exports.updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
+  const { _id } = req.user._id;
 
-  User.findByIdAndUpdate(req.user._id, { avatar }) //  { runValidators: true }
+  User.findByIdAndUpdate(_id, { avatar }) //  { runValidators: true }
     .then((user) => {
       if (!user) {
         throw new NotFoundError({ message: 'Пользователь по указанному _id не найден.' });
@@ -131,7 +134,7 @@ module.exports.updateAvatar = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Пользователь по указанному _id не найден.'));
+        next(new BadRequestError({ message: 'Пользователь по указанному _id не найден.' }));
       } else {
         next(err);
       }

@@ -36,7 +36,8 @@ app.post(
   '/signin',
   celebrate({
     body: Joi.object().keys({
-      email: Joi.string().required().email({ tlds: { allow: false } }),
+      email: Joi.string().required().email(),
+      // .email({ tlds: { allow: false } }),
       password: Joi.string().required(),
     }),
   }),

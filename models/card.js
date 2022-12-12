@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const urlRegExp = require('urlregex');
+// const urlRegExp = require('urlregex');
 
 const cardSchema = new mongoose.Schema({
   name: { // у пользователя есть имя — опишем требования к имени в схеме:

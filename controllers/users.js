@@ -79,7 +79,7 @@ module.exports.login = (req, res, next) => {
 
   User.findUserByCredentials(email, password)
     // .orFail(() => {
-    //   next(new NotFoundError('Пользователь c указанным email не найден.'));
+    //   next(new UnauthorizedError({ message: 'Пользователь c указанным email не найден.' }));
     // })
     .then((user) => {
       if (!user) {
@@ -104,8 +104,7 @@ module.exports.login = (req, res, next) => {
 
 module.exports.updateProfile = (req, res, next) => {
   const { name, about } = req.body;
-  const { _id } = req.user._id;
-  User.findByIdAndUpdate(_id, { name, about }) //  { runValidators: true }
+  User.findByIdAndUpdate(req.user._id, { name, about }) //  { runValidators: true }
     .orFail(() => {
       next(new NotFoundError({ message: 'Пользователь по указанному _id не найден.' }));
     })
@@ -123,9 +122,8 @@ module.exports.updateProfile = (req, res, next) => {
 
 module.exports.updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
-  const { _id } = req.user._id;
 
-  User.findByIdAndUpdate(_id, { avatar }) //  { runValidators: true }
+  User.findByIdAndUpdate(req.user._id, { avatar }) //  { runValidators: true }
     .then((user) => {
       if (!user) {
         throw new NotFoundError({ message: 'Пользователь по указанному _id не найден.' });

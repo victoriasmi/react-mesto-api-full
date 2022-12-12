@@ -40,13 +40,13 @@ userSchema.statics.findUserByCredentials = function (email, password) {
   return this.findOne({ email }).select('+password')// здесь в объекте user будет хеш пароля
     .then((user) => {
       if (!user) {
-        return Promise.reject(new UnauthorizedError('Неправильные почта или пароль'));
+        throw new UnauthorizedError({ message: 'Неправильные почта или пароль' });
       }
 
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            return Promise.reject(new UnauthorizedError('Неправильные почта или пароль'));
+            throw new UnauthorizedError({ message: 'Неправильные почта или пароль' });
           }
 
           return user; // теперь user доступен

@@ -20,7 +20,7 @@ router.patch(
   '/users/me/avatar',
   celebrate({
     body: Joi.object().keys({
-      link: Joi.string().required().custom(method),
+      avatar: Joi.string().required().custom(method),
     }),
   }),
   updateAvatar,

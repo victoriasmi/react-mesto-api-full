@@ -10,6 +10,7 @@ const validator = require('validator');
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const error = require('./middlewares/error');
+const BadRequestError = require('./errors/bad-request-err');
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -48,7 +49,7 @@ const method = (value) => {
   const result = validator.isURL(value);
   if (result) {
     return value;
-  } throw new Error('Некорректная ссылка.');
+  } throw new BadRequestError('Некорректная ссылка.');
 };
 
 app.post(

@@ -63,9 +63,9 @@ module.exports.createUser = (req, res, next) => {
           .then((hash) => User.create({
             name, about, avatar, email, password: hash,
           }))
-          .orFail(() => {
-            next(new UnauthorizedError({ message: 'Что-то пошло не так.' }));
-          })
+          // .orFail(() => {
+          //   next(new UnauthorizedError({ message: 'Что-то пошло не так.' }));
+          // })
           .then(() => {
             res.status(200).send({
               name, about, avatar, email,

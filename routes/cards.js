@@ -28,7 +28,7 @@ router.delete(
   '/cards/:cardId',
   celebrate({
     body: Joi.object().keys({
-      cardId: Joi.string().length(24).hex(),
+      cardId: Joi.string().min(24).hex(),
     }),
   }),
   deleteCard,
@@ -37,7 +37,7 @@ router.put(
   '/cards/:cardId/likes',
   celebrate({
     body: Joi.object().keys({
-      cardId: Joi.string().length(24).hex(),
+      cardId: Joi.string().min(24).hex(),
     }),
   }),
   likeCard,
@@ -46,7 +46,7 @@ router.delete(
   '/cards/:cardId/likes',
   celebrate({
     body: Joi.object().keys({
-      cardId: Joi.string().length(24).hex(),
+      cardId: Joi.string().min(24).hex(),
     }),
   }),
   dislikeCard,

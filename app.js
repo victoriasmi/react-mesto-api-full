@@ -66,20 +66,19 @@ app.post(
   }),
   createUser,
 );
-
-// app.use((req, res) => {
-//   res.status(401).send({ message: 'Необходима авторизация' });
-// });
-
-// app.use((req, res) => {
-//   res.status(404).send({ message: 'Страница по указанному маршруту не найдена' });
-// });
+app.use((req, res) => {
+  res.status(404).send({ message: 'Страница по указанному маршруту не найдена' });
+});
 
 // авторизация
 app.use(auth);
 
 app.use('/', require('./routes/users'));
 app.use('/', require('./routes/cards'));
+
+app.use((req, res) => {
+  res.status(401).send({ message: 'Необходима авторизация' });
+});
 
 app.use(errors()); // обработчик ошибок celebrate
 app.use(error);// централизованный обработчик ошибок

@@ -28,8 +28,8 @@ router.post(
 router.delete(
   '/cards/:cardId',
   celebrate({
-    body: Joi.object().keys({
-      cardId: Joi.string().min(24).hex(),
+    params: Joi.object().keys({
+      cardId: Joi.string().length(24).hex(),
     }),
   }),
   deleteCard,
@@ -37,8 +37,8 @@ router.delete(
 router.put(
   '/cards/:cardId/likes',
   celebrate({
-    body: Joi.object().keys({
-      cardId: Joi.string().min(24).hex(),
+    params: Joi.object().keys({
+      cardId: Joi.string().length(24).hex(),
     }),
   }),
   likeCard,
@@ -46,19 +46,11 @@ router.put(
 router.delete(
   '/cards/:cardId/likes',
   celebrate({
-    body: Joi.object().keys({
-      cardId: Joi.string().min(24).hex(),
+    params: Joi.object().keys({
+      cardId: Joi.string().length(24).hex(),
     }),
   }),
   dislikeCard,
 );
-
-// router.use((req, res) => {
-//   res.status(404).send({ message: 'Страница по указанному маршруту не найдена' });
-// });
-
-// router.use((req, res, next) => {
-//   next(new NotFoundError('Страница не найдена.'));
-// });
 
 module.exports = router;

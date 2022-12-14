@@ -3,8 +3,9 @@ module.exports = ((err, req, res, next) => {
   // если у ошибки нет статуса, выставляем 500
   const { statusCode = 500, message } = err;
 
-  res.status(401).send({ message: 'Необходима авторизация' });
-  res.status(404).send({ message: 'Страница по указанному маршруту не найдена' });
+  if (err.statusCode === 401) {
+    res.send({ message: 'Необходима авторизация' });
+  }
 
   res
     .status(statusCode)

@@ -27,7 +27,13 @@ module.exports.getCurrentUser = (req, res, next) => {
     .then((user) => {
       res.status(200).send({ data: user });
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'CastError' || err.name === 'ValidationError') {
+        next(new BadRequestError({ message: 'Пользователь не найден.' }));
+      } else {
+        next(err);
+      }
+    });
 };
 
 module.exports.getUserById = (req, res, next) => {

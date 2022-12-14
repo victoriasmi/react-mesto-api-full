@@ -44,15 +44,14 @@ module.exports.deleteCard = (req, res, next) => {
       }
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.name === 'CastError' || err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные.'));
       } else if (err.name === 'ResourceNotFound') {
         next(new NotFoundError('Карточка с указанным _id не найдена.'));
-      } else if (err.name === 'RangeError') {
-        next(new NotFoundError('Карточка с указанным _id не найдена.'));
       } else {
-        next(err);
+        next(new NotFoundError('Карточка с указанным _id не найдена.'));
       }
+      next(err);
     });
 };
 
@@ -72,7 +71,7 @@ module.exports.likeCard = (req, res, next) => {
       res.status(200).send({ data: card });
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.name === 'CastError' || err.name === 'ValidationError') {
         next(new BadRequestError({ message: 'Карточка с указанным _id не найдена.' }));
       } else {
         next(err);
@@ -93,7 +92,7 @@ module.exports.dislikeCard = (req, res, next) => {
       res.status(200).send({ data: card });
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.name === 'CastError' || err.name === 'ValidationError') {
         next(new BadRequestError({ message: 'Карточка с указанным _id не найдена.' }));
       } else {
         next(err);

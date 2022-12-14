@@ -57,7 +57,7 @@ module.exports.createUser = (req, res, next) => {
   User.findOne({ email })// отрабатывает ли проверка?
     .then((mail) => {
       if (mail) {
-        throw new ConflictError({ message: 'Пользователь с таким email уже существует.' });
+        next(new ConflictError({ message: 'Пользователь с таким email уже существует.' }));
       } else {
         bcrypt.hash(req.body.password, 10)
           .then((hash) => User.create({
@@ -86,7 +86,7 @@ module.exports.login = (req, res, next) => {
     // })
     .then((user) => {
       if (!user) {
-        throw new UnauthorizedError({ message: 'Ошибка аутентификации.' });
+        next(new UnauthorizedError({ message: 'Ошибка аутентификации.' }));
       }
       // аутентификация успешна! пользователь в переменной user
       const token = jwt.sign(

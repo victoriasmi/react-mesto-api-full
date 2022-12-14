@@ -73,7 +73,13 @@ module.exports.createUser = (req, res, next) => {
           });
       }
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'DuplicateKeyError') {
+        next(new ConflictError({ message: 'Пользователь с таким email уже существует.' }));
+      } else {
+        next(err);
+      }
+    });
 };
 
 // Мы рекомендуем записывать JWT в httpOnly куку
@@ -102,7 +108,13 @@ module.exports.login = (req, res, next) => {
       // вернём токен
       return res.send({ token });
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'DuplicateKeyError') {
+        next(new ConflictError({ message: 'Пользователь с таким email уже существует.' }));
+      } else {
+        next(err);
+      }
+    });
 };
 
 module.exports.updateProfile = (req, res, next) => {

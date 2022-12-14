@@ -30,9 +30,9 @@ module.exports.createCard = (req, res, next) => {
 
 module.exports.deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId)
-    .orFail(() => {
-      next(new NotFoundError('Карточка с указанным _id не найдена.'));
-    })
+    // .orFail(() => {
+    //   next(new NotFoundError('Карточка с указанным _id не найдена.'));
+    // })
     .then((data) => {
       if (data.owner._id.valueOf() === req.user._id) {
         Card.findByIdAndRemove(req.params.cardId)
@@ -40,7 +40,7 @@ module.exports.deleteCard = (req, res, next) => {
             res.status(200).send({ data: card });
           });
       } else {
-        throw new ForbiddenError('У вас нет прав для осуществления этого действия.');
+        next(new ForbiddenError('У вас нет прав для осуществления этого действия.'));
       }
     })
     .catch((err) => {

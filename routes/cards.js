@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 const validator = require('validator');
+const NotFoundError = require('../errors/not-found-err');
 
 const {
   getCard, createCard, deleteCard, likeCard, dislikeCard,
@@ -54,6 +55,10 @@ router.delete(
 
 // router.use((req, res) => {
 //   res.status(404).send({ message: 'Страница по указанному маршруту не найдена' });
+// });
+
+// router.use((req, res, next) => {
+//   next(new NotFoundError('Страница не найдена.'));
 // });
 
 module.exports = router;

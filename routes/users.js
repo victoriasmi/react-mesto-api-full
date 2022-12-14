@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 // const validator = require('validator');
+const NotFoundError = require('../errors/not-found-err');
 
 const {
   getUsers, getUserById, updateAvatar, updateProfile, getCurrentUser,
@@ -35,5 +36,9 @@ router.patch(
   }),
   updateProfile,
 );
+
+// router.use((req, res, next) => {
+//   next(new NotFoundError('Страница не найдена.'));
+// });
 
 module.exports = router;

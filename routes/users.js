@@ -1,18 +1,18 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
-// const validator = require('validator');
-const NotFoundError = require('../errors/not-found-err');
+const validator = require('validator');
+// const NotFoundError = require('../errors/not-found-err');
 
 const {
   getUsers, getUserById, updateAvatar, updateProfile, getCurrentUser,
 } = require('../controllers/users');
 
-// const method = (value) => {
-//   const result = validator.isURL(value);
-//   if (result) {
-//     return value;
-//   } throw new Error('Некорректная ссылка.');
-// };
+const method = (value) => {
+  const result = validator.isURL(value);
+  if (result) {
+    return value;
+  } throw new Error('Некорректная ссылка.');
+};
 
 router.get('/users/me', getCurrentUser);
 router.get('/users', getUsers);
@@ -21,7 +21,7 @@ router.patch(
   '/users/me/avatar',
   celebrate({
     body: Joi.object().keys({
-      avatar: Joi.string().required().uri(),
+      avatar: Joi.string().required().custom(method),
     }),
   }),
   updateAvatar,

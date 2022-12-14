@@ -48,6 +48,8 @@ module.exports.deleteCard = (req, res, next) => {
         next(new BadRequestError('Переданы некорректные данные.'));
       } else if (err.name === 'ResourceNotFound') {
         next(new NotFoundError('Карточка с указанным _id не найдена.'));
+      } else if (err.name === 'RangeError') {
+        next(new NotFoundError('Карточка с указанным _id не найдена.'));
       } else {
         next(err);
       }

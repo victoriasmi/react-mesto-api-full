@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 const validator = require('validator');
-// const NotFoundError = require('../errors/not-found-err');
 
 const {
   getCard, createCard, deleteCard, likeCard, dislikeCard,

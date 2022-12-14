@@ -28,7 +28,7 @@ module.exports.getCurrentUser = (req, res, next) => {
       res.status(200).send({ data: user });
     })
     .catch((err) => {
-      if (err.name === 'CastError' || err.name === 'ValidationError') {
+      if (err.name === 'CastError' || err.name === 'ValidationError' || err.name === 'ResourceNotFound') {
         next(new BadRequestError({ message: 'Пользователь не найден.' }));
       } else {
         next(err);

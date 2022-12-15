@@ -11,7 +11,7 @@ module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => {
       if (!users) {
-        throw new NotFoundError({ message: 'Пользователь по указанному _id не найден.' });
+        throw new NotFoundError('Пользователь по указанному _id не найден.');
       }
       res.status(200).send({ data: users });
     })
@@ -22,14 +22,14 @@ module.exports.getCurrentUser = (req, res, next) => {
   const { _id } = req.user._id;
   User.findOne(_id)
     .orFail(() => {
-      next(new NotFoundError({ message: 'Пользователь по указанному _id не найден.' }));
+      next(new NotFoundError('Пользователь по указанному _id не найден.'));
     })
     .then((user) => {
       res.status(200).send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError' || err.name === 'ResourceNotFound') {
-        next(new BadRequestError({ message: 'Пользователь не найден.' }));
+        next(new BadRequestError('Пользователь не найден.'));
       } else {
         next(err);
       }
@@ -39,16 +39,16 @@ module.exports.getCurrentUser = (req, res, next) => {
 module.exports.getUserById = (req, res, next) => {
   User.findById(req.params.userId)
     .orFail(() => {
-      next(new NotFoundError({ message: 'Пользователь по указанному _id не найден.' }));
+      next(new NotFoundError('Пользователь по указанному _id не найден.'));
     })
     .then((user) => {
       res.status(200).send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError({ message: 'Пользователь по указанному _id не найден.' }));
+        next(new BadRequestError('Пользователь по указанному _id не найден.'));
       } else if (err.name === 'ResourceNotFound') {
-        next(new NotFoundError({ message: 'Пользователь по указанному _id не найден.' }));
+        next(new NotFoundError('Пользователь по указанному _id не найден.'));
       } else {
         next(err);
       }
@@ -62,16 +62,13 @@ module.exports.createUser = (req, res, next) => {
 
   User.findOne({ email })// отрабатывает ли проверка?
     .then((mail) => {
-      if (mail) {
-        next(new ConflictError({ message: 'Пользователь с таким email уже существует.' }));
+      if (mail.email) {
+        throw new ConflictError('Пользователь с таким email уже существует.');
       } else {
         bcrypt.hash(req.body.password, 10)
           .then((hash) => User.create({
             name, about, avatar, email, password: hash,
           }))
-          // .orFail(() => {
-          //   next(new UnauthorizedError({ message: 'Что-то пошло не так.' }));
-          // })
           .then(() => {
             res.status(200).send({
               name, about, avatar, email,
@@ -81,7 +78,7 @@ module.exports.createUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'DuplicateKeyError') {
-        next(new ConflictError({ message: 'Пользователь с таким email уже существует.' }));
+        next(new ConflictError('Пользователь с таким email уже существует.'));
       } else {
         next(err);
       }
@@ -93,12 +90,10 @@ module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
   User.findUserByCredentials(email, password)
-    // .orFail(() => {
-    //   next(new UnauthorizedError({ message: 'Пользователь c указанным email не найден.' }));
-    // })
     .then((user) => {
       if (!user) {
-        next(new UnauthorizedError({ message: 'Ошибка аутентификации.' }));
+        console.log(user);
+        next(new UnauthorizedError('Ошибка аутентификации.'));
       }
       // аутентификация успешна! пользователь в переменной user
       const token = jwt.sign(
@@ -115,8 +110,9 @@ module.exports.login = (req, res, next) => {
       return res.send({ token });
     })
     .catch((err) => {
-      if (err.name === 'DuplicateKeyError') {
-        next(new ConflictError({ message: 'Пользователь с таким email уже существует.' }));
+      console.log(err);
+      if (err.name === 'CastError') {
+        next(new UnauthorizedError('Ошибка аутентификации.'));
       } else {
         next(err);
       }
@@ -127,14 +123,14 @@ module.exports.updateProfile = (req, res, next) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(req.user._id, { name, about }) //  { runValidators: true }
     .orFail(() => {
-      next(new NotFoundError({ message: 'Пользователь по указанному _id не найден.' }));
+      next(new NotFoundError('Пользователь по указанному _id не найден.'));
     })
     .then(() => {
       res.status(200).send(req.body);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError({ message: 'Пользователь по указанному _id не найден.' }));
+        next(new BadRequestError('Пользователь по указанному _id не найден.'));
       } else {
         next(err);
       }
@@ -147,13 +143,13 @@ module.exports.updateAvatar = (req, res, next) => {
   User.findByIdAndUpdate(req.user._id, { avatar }) //  { runValidators: true }
     .then((user) => {
       if (!user) {
-        throw new NotFoundError({ message: 'Пользователь по указанному _id не найден.' });
+        throw new NotFoundError('Пользователь по указанному _id не найден.');
       }
       res.status(200).send(req.body);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError({ message: 'Пользователь по указанному _id не найден.' }));
+        next(new BadRequestError('Пользователь по указанному _id не найден.'));
       } else {
         next(err);
       }

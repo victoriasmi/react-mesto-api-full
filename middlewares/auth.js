@@ -17,14 +17,14 @@ module.exports = (req, res, next) => {
   // const { jwtCookies } = req.cookies.jwt;
   const token = req.cookies.jwt;
   if (!token) {
-    throw new UnauthorizedError({ message: 'Необходима авторизация.' });
+    throw new UnauthorizedError('Необходима авторизация.');
   }
   let payload;
   try {
     // попытаемся верифицировать токен
     payload = jwt.verify(token, JWT_SECRET);
   } catch (err) {
-    next(new UnauthorizedError({ message: 'Такого пользователя не существует.' }));
+    next(new UnauthorizedError('Такого пользователя не существует.'));
   }
   req.user = payload; // записываем пейлоуд в объект запроса
 

@@ -57,7 +57,6 @@ app.post(
   celebrate({
     body: Joi.object().keys({
       email: Joi.string().required().email(),
-      // { tlds: { allow: false } }
       password: Joi.string().required(),
       name: Joi.string().min(2).max(30),
       about: Joi.string().min(2).max(30),
@@ -66,9 +65,6 @@ app.post(
   }),
   createUser,
 );
-// app.use((req, res) => {
-//   res.status(404).send({ message: 'Страница по указанному маршруту не найдена' });
-// });
 
 // авторизация
 app.use(auth);

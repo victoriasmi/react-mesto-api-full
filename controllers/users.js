@@ -59,10 +59,9 @@ module.exports.createUser = (req, res, next) => {
   const {
     name, about, avatar, email,
   } = req.body;
-
   User.findOne({ email })// отрабатывает ли проверка?
     .then((mail) => {
-      if (mail.email) {
+      if (mail) {
         throw new ConflictError('Пользователь с таким email уже существует.');
       } else {
         bcrypt.hash(req.body.password, 10)
@@ -77,8 +76,11 @@ module.exports.createUser = (req, res, next) => {
       }
     })
     .catch((err) => {
-      if (err.name === 'DuplicateKeyError') {
+      console.log(err);
+      if (err.name === 'DuplicateKeyError' || err.name === 'RangeError') {
         next(new ConflictError('Пользователь с таким email уже существует.'));
+      } else if (err.name === 'ValidationError') {
+        next(new BadRequestError('Пользователь по указанному _id не найден.'));
       } else {
         next(err);
       }

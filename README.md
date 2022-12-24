@@ -1,8 +1,11 @@
 # Проект Mesto фронтенд + бэкенд
 
 [Ссылка](https://github.com/victoriasmi/react-mesto-api-full.git) на репозиторий.
+
 Публичный IP-адрес сервера: 158.160.53.255
+
 URL сервера frontend: mestoproject.nomoredomains.club
+
 URL сервера backend: api.mestoproject.nomoredomains.club
 
 ## Директории

@@ -1,0 +1,12 @@
+.starter-page__signin {
+  display: flex;
+  flex-direction: row;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 16.94px;
+  color: #FFFFFF;
+  padding: 15px auto 80px;
+  margin: 0;
+  text-align: center;
+  align-self: center;
+}

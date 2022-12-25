@@ -1,0 +1,12 @@
+.profile__edit {
+  display: flex;
+  flex-direction: row;
+  gap: 18px;
+  align-items: center;
+}
+
+@media (max-width: 767px) {
+  .profile__edit {
+    gap: 10px;
+  }
+}

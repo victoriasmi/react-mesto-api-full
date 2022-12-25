@@ -1,0 +1,11 @@
+.header__info {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+}
+
+@media (max-width: 879px) {
+  .header__info {
+    padding-right: 27px;
+  }
+}

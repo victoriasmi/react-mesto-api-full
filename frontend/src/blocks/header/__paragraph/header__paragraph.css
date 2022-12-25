@@ -1,0 +1,9 @@
+.header__paragraph {
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 22px;
+  align-self: flex-start;
+  padding-top: 2px;
+  margin: 0;
+}

@@ -1,0 +1,11 @@
+.popup__save_type_invalid {
+  opacity: 20%;
+  background-color: #ffffff;
+  color: #000000;
+  border: 1px solid #000000;
+  cursor: default;
+}
+
+.popup__save_type_invalid:hover {
+  opacity: 20%;
+}

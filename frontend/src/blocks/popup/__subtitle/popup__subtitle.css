@@ -1,0 +1,16 @@
+.popup__subtitle {
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 15px;
+  color: #ffffff;
+  z-index: 50;
+  align-self: flex-start;
+}
+
+@media (max-width: 767px) {
+  .popup__subtitle {
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 14.52px;
+  }
+}

@@ -1,0 +1,5 @@
+.header_type_starter-page {
+  display: flex;
+  justify-content: space-between;
+  align-items: top;
+}

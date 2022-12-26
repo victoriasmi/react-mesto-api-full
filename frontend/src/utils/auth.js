@@ -20,7 +20,15 @@ class Auth {
       body: JSON.stringify({ email, password })
     })
       .then((res) => {
-        this._getResponseData(res);
+        return res.json();
+      })
+      .then((data) => {
+        console.log(data);
+        return data;
+      })
+      .then((data) => {
+        console.log(data);
+        return data;
       })
   }
 
@@ -37,7 +45,6 @@ class Auth {
         return res.json();
       })
       .then((data) => {
-        // console.log(data);
         return data;
       })
       .then((data) => {
@@ -53,21 +60,17 @@ class Auth {
         "Accept": "application/json",
         "Content-Type": "application/json",
         "Authorization": `Bearer ${token}`,
-        // authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     })
-    .then((res) => {
-      return this._getResponseData(res);
-    })
-    .then((data) => {
-      // console.log(data);
-      return data;
-    })
-    .then((data) => {
-      // console.log(data);
-      // console.log(`Bearer ${localStorage.getItem("token")}`);
-      return data;
-    })
+      .then((res) => {
+        return this._getResponseData(res);
+      })
+      .then((data) => {
+        return data;
+      })
+      .then((data) => {
+        return data;
+      })
   }
 }
 

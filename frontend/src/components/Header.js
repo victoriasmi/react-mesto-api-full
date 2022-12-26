@@ -1,15 +1,19 @@
-import React from "react";
+import React, { useState} from 'react';
 import { useHistory } from "react-router-dom";
 import { Link, Route, Switch } from "react-router-dom";
+// import { ProgressPlugin } from "webpack";
 import logo from '../images/logo.svg';
 
 
 export default function Header({ email }) {
   const history = useHistory();
+  const [loggedIn, setLoggedIn] = useState(false);
 
-  function handleLogOut() {
+  function handleLogOut(e) {
     localStorage.removeItem("token");
     console.log(localStorage.getItem("token"));
+    setLoggedIn(false);
+    console.log(loggedIn);
     history.push("/signin");
   }
 

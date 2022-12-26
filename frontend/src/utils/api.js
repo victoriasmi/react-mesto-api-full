@@ -1,7 +1,6 @@
 class Api {
   constructor({ baseUrl }) {
     this._baseUrl = baseUrl;
-    // this._headers = headers;
   }
 
   _getResponseData(res) {
@@ -28,7 +27,6 @@ class Api {
       })
       .then((data) => {
         // console.log(data);
-        // console.log(`Bearer ${localStorage.getItem("token")}`)
         return data;
       })
   }
@@ -55,7 +53,6 @@ class Api {
       })
       .then((data) => {
         // console.log(data);
-        // console.log(`Bearer ${localStorage.getItem("token")}`)
         return data;
       })
   }
@@ -76,7 +73,6 @@ class Api {
       })
       .then((data) => {
         // console.log(data);
-        // console.log(`Bearer ${localStorage.getItem("token")}`)
         return data;
       })
   }
@@ -102,7 +98,6 @@ class Api {
       })
       .then((data) => {
         // console.log(data);
-        // console.log(`Bearer ${localStorage.getItem("token")}`)
         return data;
       })
   }
@@ -140,14 +135,14 @@ class Api {
         return this._getResponseData(res);
       })
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         return data;
       })
-      // .then((data) => {
-      //   console.log(data);
-      //   console.log(`Bearer ${localStorage.getItem("token")}`)
-      //   return data;
-      // })
+      .then((data) => {
+        // console.log(data);
+        // console.log(`Bearer ${localStorage.getItem("token")}`)
+        return data;
+      })
   }
 
   removelikeCard(_id) {
@@ -162,12 +157,12 @@ class Api {
         return this._getResponseData(res);
       })
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         return data;
       })
       .then((data) => {
-        console.log(data);
-        console.log(`Bearer ${localStorage.getItem("token")}`)
+        // console.log(data);
+        // console.log(`Bearer ${localStorage.getItem("token")}`)
         return data;
       })
   }
@@ -175,7 +170,7 @@ class Api {
   changeLikeCard(_id, isLiked) {
     console.log(_id);
     console.log(isLiked);
-    return isLiked ? this.likeCard(_id) : this.removelikeCard(_id)
+    return isLiked ? this.removelikeCard(_id) : this.likeCard(_id)
   }
 
   editAvatar(input) {

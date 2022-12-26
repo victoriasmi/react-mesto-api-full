@@ -31,7 +31,6 @@ console.log(props.cards);
             card={card}
             onCardClick={props.onCardClick}
             onCardLike={props.onCardLike}
-            onCardRemoveLike={props.onCardRemoveLike}
             onCardDelete={props.onCardDelete}
           />
         ))

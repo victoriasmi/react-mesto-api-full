@@ -29,11 +29,15 @@ export default function App() {
 
   function handleRegisterSubmit(email, password) {
     auth.register(email, password)
-      .then(() => {
-        // localStorage.removeItem("token");
-        setIsSuccess(true);
-        setIsInfoTooltipOpen(true);
-        history.push('/signin');
+      .then((data) => {
+        if (data.email) {
+          setIsSuccess(true);
+          setIsInfoTooltipOpen(true);
+          history.push('/signin');
+        } else {
+          setIsSuccess(false);
+          setIsInfoTooltipOpen(true);
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -47,12 +51,15 @@ export default function App() {
       .then((res) => {
         if (res.token) {
           localStorage.setItem("token", res.token);
-          // console.log(localStorage.getItem("token"));
-          // console.log(res.token);
-          // console.log(email);
           setEmail(email);
-          setLoggedIn(true);
+
+          authInfo(res.token);
+          getCards();
           history.push('/');
+        }
+        else {
+          setIsSuccess(false);
+          setIsInfoTooltipOpen(true);
         }
       })
       .catch((err) => {
@@ -62,75 +69,25 @@ export default function App() {
       })
   }
 
-  // useEffect(() => {
-  //   if (loggedIn) {
-  //     const token = localStorage.getItem("token");
-  //     console.log(token);
-  //     if (token) {
-  //       authInfo();
-  //     }
-  //   }
-  // }, [])
-
-  // useEffect(() => {
-  //   const token = localStorage.getItem("token");
-  //   console.log(token);
-  //   if (token) {
-  //     auth.getInfo()
-  //       .then((data) => {
-  //         console.log(data);
-  //         console.log(data.data.email);
-  //         // setEmail(data.data.email);
-  //         // setLoggedIn(true);
-  //         // console.log(loggedIn);
-  //         history.push('/');
-  //         console.log('checkTokenActivate');
-  //       })
-  //       .catch((err) => {
-  //         console.log(err);
-  //       })
-  //   }
-  // }, [loggedIn])
-
-  // function checkToken() {
-  //   auth.getInfo()
-  //     .then((data) => {
-  //       console.log(data);
-  //       console.log(data.data.email);
-  //       setEmail(data.data.email);
-  //       setLoggedIn(true);
-  //       console.log(loggedIn);
-  //       history.push('/');
-  //       console.log('checkTokenWorked');
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     })
-  // }
-
-  // useEffect(() => {
-  //   if (loggedIn) {
-  //     history.push("/");
-  //   }
-  // }, []);
-
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       authInfo(token);
     }
+    // console.log(loggedIn);
   }, [])
 
   useEffect(() => {
     if (loggedIn) {
       history.push("/");
     }
-  }, [loggedIn]);
+  }, [loggedIn, history]);
 
   function authInfo(token) {
     auth.getInfo(token)
       .then((data) => {
         setEmail(data.data.email);
+        setCurrentUser(data.data);
         setLoggedIn(true);
       })
       .catch((err) => {
@@ -139,33 +96,38 @@ export default function App() {
   }
 
   useEffect(() => {
-    // if (loggedIn) {
-      api.getInitialCards()
-        .then((cardsData) => {
-          console.log(cardsData.data);
-          setCards(cardsData.data);
-          console.log(loggedIn);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    // }
-  }, [loggedIn])
+    api.getProfileInfo()
+      .then((userData) => {
+        setCurrentUser(userData.data);
+        console.log(userData.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [])
+
 
   useEffect(() => {
-    // if (loggedIn) {
-      api.getProfileInfo()
-        .then((userData) => {
-          console.log(userData.data);
-          setCurrentUser(userData.data);
-          console.log(loggedIn);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    // }
-  }, [loggedIn]);
+    api.getInitialCards()
+      .then((cardsData) => {
+        setCards(cardsData.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [])
 
+  function getCards() {
+    api.getInitialCards()
+      .then((cardsData) => {
+        setCards(cardsData.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  console.log(loggedIn);
 
   function handleEditProfileClick() {
     setIsEditProfilePopupOpen(true);
@@ -216,10 +178,11 @@ export default function App() {
   }
 
   function handleCardLike(card) {
-    const isLiked = card.likes.some((i) => console.log(i) === console.log(currentUser._id));
-    // console.log(card.likes);
-    // console.log(card._id);
-    api.changeLikeCard(card._id, !isLiked).then((newCard) => {
+    const isLiked = card.likes.some((i) => i === currentUser._id);
+    console.log(isLiked);
+    api.changeLikeCard(card._id, isLiked).then((newCard) => {
+      console.log(card.id);
+      console.log(newCard.card);
       return setCards((state) => state.map((c) => c._id === card._id ? newCard.card : c));
     })
       .catch((err) => {
@@ -257,6 +220,7 @@ export default function App() {
           <Route path="/signup">
             <Header
               email={email}
+            // onHandleLogOut={handleLogOut}
             />
             <Register
               onRegister={handleRegisterSubmit}

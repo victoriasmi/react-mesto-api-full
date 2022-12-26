@@ -15,16 +15,9 @@ export default function Card(props) {
   }
 
   const currentUser = React.useContext(CurrentUserContext);
-  console.log(props.card.owner);
-  console.log(props.card);
-  console.log(currentUser._id);
-  console.log(props.card.likes);
-  console.log(props.likes);
   const isOwn = props.card.owner === currentUser._id;
-  const isLiked = props.card.likes.some((i) => i === currentUser._id);
 
-  // console.log(props.data.card.likes);
-  // console.log(props.card.data.likes);
+  const isLiked = props.card.likes.some((i) => i === currentUser._id);
 
   const cardDeleteButtonClassName = (
     `element__delete-button ${isOwn ? 'element__delete-button_active' : 'element__delete-button'}`

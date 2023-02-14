@@ -4,6 +4,6 @@ Mesto - is a social media for travel ideas and inspiration. Easy to share your o
 
 Public IP-address: 158.160.53.255
 
-[URL frontend] (mestoproject.nomoredomains.club)
+[URL frontend](mestoproject.nomoredomains.club)
 
-[URL backend] (api.mestoproject.nomoredomains.club)
+[URL backend](api.mestoproject.nomoredomains.club)

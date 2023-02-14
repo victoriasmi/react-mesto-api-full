@@ -1,22 +1,9 @@
-# Проект Mesto фронтенд + бэкенд
+# Mesto Project
 
-[Ссылка](https://github.com/victoriasmi/react-mesto-api-full.git) на репозиторий.
+Mesto - is a social media for travel ideas and inspiration. Easy to share your own ideas and scroll through others to get inspired.
 
-Публичный IP-адрес сервера: 158.160.53.255
+Public IP-address: 158.160.53.255
 
-URL сервера frontend: mestoproject.nomoredomains.club
+[URL frontend] (mestoproject.nomoredomains.club)
 
-URL сервера backend: api.mestoproject.nomoredomains.club
-
-## Директории
-
-`/routes` — папка с файлами роутера  
-`/controllers` — папка с файлами контроллеров пользователя и карточки   
-`/models` — папка с файлами описания схем пользователя и карточки  
-  
-Остальные директории вспомогательные, создаются при необходимости разработчиком
-
-## Запуск проекта
-
-`npm run start` — запускает сервер   
-`npm run dev` — запускает сервер с hot-reload
+[URL backend] (api.mestoproject.nomoredomains.club)

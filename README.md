@@ -1,4 +1,4 @@
-# [Mesto Project](mestoproject.nomoredomains.club)
+# [Mesto Project](https://mestoproject.nomoredomains.club)
 
 **Table of Contents**: 
 * About Project
@@ -37,7 +37,7 @@ Easy to share your own travel ideas as cards with places and scroll through idea
 
 **Instructions**
 
-* The project is avaliable via [link](mestoproject.nomoredomains.club)
+* The project is avaliable via [link](https://mestoproject.nomoredomains.club)
 * In order to launch locally:\
 Step 1: create project folder locally, cd <folder-name>\
 Step 2: clone [repository](https://github.com/victoriasmi/react-mesto-api-full)\

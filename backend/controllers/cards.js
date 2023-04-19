@@ -21,7 +21,7 @@ module.exports.createCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequestError('Переданы некорректные данные.'));
+        next(new BadRequestError('Incorrect input data.'));
       }
       next(err);
     });
@@ -30,7 +30,7 @@ module.exports.createCard = (req, res, next) => {
 module.exports.deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId)
     .orFail(() => {
-      throw new NotFoundError('Карточка с указанным _id не найдена.');
+      throw new NotFoundError('Card with this _id not found.');
     })
     .then((data) => {
       if (data.owner.valueOf() === req.user._id) {
@@ -39,12 +39,12 @@ module.exports.deleteCard = (req, res, next) => {
             res.status(200).send({ data: card });
           });
       } else {
-        next(new ForbiddenError('У вас нет прав для осуществления этого действия.'));
+        next(new ForbiddenError('No authorization for this action.'));
       }
     })
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
-        next(new BadRequestError('Переданы некорректные данные.'));
+        next(new BadRequestError('Incorrect data.'));
       }
       next(err);
     });
@@ -57,14 +57,14 @@ module.exports.likeCard = (req, res, next) => {
     { new: true },
   )
     .orFail(() => {
-      throw new NotFoundError('Карточка с указанным _id не найдена.');
+      throw new NotFoundError('Card with this _id not found.');
     })
     .then((card) => {
       res.status(200).send({ card });
     })
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
-        next(new BadRequestError('Карточка с указанным _id не найдена.'));
+        next(new BadRequestError('Card with this _id not found.'));
       } else {
         next(err);
       }
@@ -78,14 +78,14 @@ module.exports.dislikeCard = (req, res, next) => {
     { new: true },
   )
     .orFail(() => {
-      next(new NotFoundError('Карточка с указанным _id не найдена.'));
+      next(new NotFoundError('Card with this _id not found.'));
     })
     .then((card) => {
       res.status(200).send({ card });
     })
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
-        next(new BadRequestError('Карточка с указанным _id не найдена.'));
+        next(new BadRequestError('Card with this _id not found.'));
       } else {
         next(err);
       }

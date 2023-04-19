@@ -1,8 +1,25 @@
-import React from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import iconSuccess from '../images/successConfirmation.png';
 import iconSmthSentWrong from '../images/smthWentWrong.png';
 
-export default function InfoTooltip({ isOpen, onClose, isSuccess }) {
+export default function InfoTooltip({ isOpen, onClose, isSuccess, updateErr }) {
+
+  const [errText, setErrText] = useState("");
+
+  function checkErrText(){
+    if (updateErr.includes(409)){
+      setErrText("Email already exists");
+    } else if(updateErr.includes(401)){
+      setErrText("No such user");
+    }
+    else setErrText("Something went wrong, please try again.");
+  };
+
+  useEffect(() => {
+    checkErrText();
+    console.log(updateErr);
+  }, [updateErr]);
+
 
   return (
     <div className={`popup popup_type_info-tool-tip ${isOpen && "popup_opened"}`}>
@@ -15,7 +32,7 @@ export default function InfoTooltip({ isOpen, onClose, isSuccess }) {
             alt={isSuccess ? "Успех" : "Неудача" }
           />
           <p className="popup__title popup__title_type_info-tool-tip">
-            {isSuccess ? "Вы успешно зарегистрировались!" : "Что-то пошло не так! Попробуйте еще раз."}
+            {isSuccess ? "Successfully registered!" : errText}
           </p>
         </form>
       </div>

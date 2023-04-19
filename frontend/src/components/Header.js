@@ -23,12 +23,12 @@ export default function Header({ email }) {
       <Switch>
         <Route path="/signin">
           <div className="header__info">
-            <Link className="header__link" to="/signup">Зарегистрироваться</Link>
+            <Link className="header__link" to="/signup">Register</Link>
           </div>
         </Route>
         <Route path="/signup">
           <div className="header__info">
-            <Link className="header__link" to="/signin">Войти</Link>
+            <Link className="header__link" to="/signin">Log in</Link>
           </div>
         </Route>
         <Route path="/">
@@ -39,7 +39,7 @@ export default function Header({ email }) {
               to="/signin"
               onClick={handleLogOut}
             >
-              Выйти
+              Log out
             </Link>
           </div>
         </Route>

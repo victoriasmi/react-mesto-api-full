@@ -25,6 +25,7 @@ export default function App() {
   const [email, setEmail] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [updateErr, setUpdateErr] = useState("");
   const history = useHistory();
 
   function handleRegisterSubmit(email, password) {
@@ -41,6 +42,7 @@ export default function App() {
       })
       .catch((err) => {
         console.log(err);
+        setUpdateErr(err);
         setIsSuccess(false);
         setIsInfoTooltipOpen(true);
       })
@@ -64,6 +66,7 @@ export default function App() {
       })
       .catch((err) => {
         console.log(err);
+        setUpdateErr(err);
         setIsSuccess(false);
         setIsInfoTooltipOpen(true);
       })
@@ -226,6 +229,7 @@ export default function App() {
               onRegister={handleRegisterSubmit}
               isOpen={isInfoTooltipOpen}
               isSuccess={isSuccess}
+              updateErr={updateErr}
               onClose={closeAllPopups}
             />
             <Footer />
@@ -239,6 +243,7 @@ export default function App() {
               onLogin={handleLoginSubmit}
               isOpen={isInfoTooltipOpen}
               isSuccess={isSuccess}
+              updateErr={updateErr}
               onClose={closeAllPopups}
             />
             <Footer />

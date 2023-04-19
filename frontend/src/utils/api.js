@@ -191,14 +191,15 @@ class Api {
         // console.log(data);
         return data;
       })
-      .then((data) => {
-        // console.log(data);
-        // console.log(`Bearer ${localStorage.getItem("token")}`)
-        return data;
-      })
+      // .then((data) => {
+      //   // console.log(data);
+      //   // console.log(`Bearer ${localStorage.getItem("token")}`)
+      //   return data;
+      // })
   }
 }
 
 export const api = new Api({
-  baseUrl: 'https://api.mestoproject.nomoredomains.club',
+  // baseUrl: 'https://api.mestoproject.nomoredomains.club',
+  baseUrl: 'http://localhost:3000',
 });

@@ -20,7 +20,7 @@ class Auth {
       body: JSON.stringify({ email, password })
     })
       .then((res) => {
-        return res.json();
+        return this._getResponseData(res);
       })
       .then((data) => {
         console.log(data);
@@ -42,7 +42,7 @@ class Auth {
       body: JSON.stringify({ email, password })
     })
       .then((res) => {
-        return res.json();
+        return this._getResponseData(res);
       })
       .then((data) => {
         return data;
@@ -75,6 +75,7 @@ class Auth {
 }
 
 export const auth = new Auth({
-  baseUrl: 'https://api.mestoproject.nomoredomains.club',
+  // baseUrl: 'https://api.mestoproject.nomoredomains.club',
+  baseUrl: 'http://localhost:3000',
 });
 

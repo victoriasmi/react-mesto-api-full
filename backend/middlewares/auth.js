@@ -26,7 +26,7 @@ module.exports = (req, res, next) => {
     );
     // console.log({ pay: payload });
   } catch (err) {
-    next(new UnauthorizedError('Такого пользователя не существует.'));
+    next(new UnauthorizedError('No such user.'));
   }
   req.user = payload; // записываем пейлоуд в объект запроса
   // console.log(req.user);

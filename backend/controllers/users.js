@@ -31,14 +31,14 @@ module.exports.getCurrentUser = (req, res, next) => {
 module.exports.getUserById = (req, res, next) => {
   User.findById(req.params.userId)
     .orFail(() => {
-      next(new NotFoundError('Пользователь по указанному _id не найден.'));
+      next(new NotFoundError('User with this _id not found.'));
     })
     .then((user) => {
       res.status(200).send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Пользователь по указанному _id не найден.'));
+        next(new BadRequestError('User with this _id not found.'));
       } else {
         next(err);
       }
@@ -66,9 +66,9 @@ module.exports.createUser = (req, res, next) => {
     // })
     .catch((err) => {
       if (err.code === 11000) {
-        next(new ConflictError('Пользователь с таким email уже существует.'));
+        next(new ConflictError('Email already exists.'));
       } else if (err.name === 'ValidationError') {
-        next(new BadRequestError('Некорректные данные.'));
+        next(new BadRequestError('Incorrect input data.'));
       } else {
         next(err);
       }
@@ -82,7 +82,7 @@ module.exports.login = (req, res, next) => {
   User.findUserByCredentials(email, password)
     .then((user) => {
       if (!user) {
-        return next(new UnauthorizedError('Ошибка аутентификации.'));
+        return next(new UnauthorizedError('Authentication error.'));
       }
       // аутентификация успешна! пользователь в переменной user
       const token = jwt.sign(
@@ -101,14 +101,14 @@ module.exports.updateProfile = (req, res, next) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .orFail(() => {
-      next(new NotFoundError('Пользователь по указанному _id не найден.'));
+      next(new NotFoundError('User with this _id not found.'));
     })
     .then((user) => {
       res.status(200).send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequestError('Некорректные данные.'));
+        next(new BadRequestError('Incorrect input data.'));
       } else {
         next(err);
       }
@@ -121,13 +121,13 @@ module.exports.updateAvatar = (req, res, next) => {
   User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
-        next(new NotFoundError('Пользователь по указанному _id не найден.'));
+        next(new NotFoundError('User with this _id not found.'));
       }
       res.status(200).send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequestError('Некорректные данные.'));
+        next(new BadRequestError('Incorrect input data.'));
       } else {
         next(err);
       }

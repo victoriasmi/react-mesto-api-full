@@ -26,8 +26,7 @@ Easy to share your own travel ideas as cards with places and scroll through idea
 **Technologies**
 
 * HTML, CSS
-* JS
-* React
+* React 
 * React Router
 * Redux
 * Express.js

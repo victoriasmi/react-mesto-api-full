@@ -30,6 +30,7 @@ Easy to share your own travel ideas as cards with places and scroll through idea
 * React Router
 * Redux
 * Express.js
+* Nginx
 * private API
 * Hooks (useState, useEffect, useContext) 
 * MongoDB
